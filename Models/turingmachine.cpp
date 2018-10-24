@@ -77,7 +77,6 @@ TuringMachine::TuringMachine(const TuringMachine *other)
     }
 
     this->resetMachine();
-
 }
 
 TuringMachine::StateError TuringMachine::addState(QString state_name,StateAction on_zero,StateAction on_one, bool starting_state)
@@ -165,7 +164,6 @@ TuringMachine::MachineError TuringMachine::validateMachine(QString &error)
         error = "La maquina no tiene cargada ningun estado.";
         return  MachineError::EmptyMachine;
     }
-
 
     bool has_end = false;
 
@@ -285,7 +283,6 @@ void TuringMachine::exec_machine(int steps, QTextBrowser *output)
 
     if(output != nullptr)
         output->append("<b>Duración: " + TimeHelper::print_elapsed_time(elapsed_timer.nsecsElapsed()) + "</b><br>");
-
 
 }
 

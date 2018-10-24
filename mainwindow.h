@@ -51,12 +51,10 @@ private:
     void initDefaultMachines();
     void selectMachine();
 
-
     QList<TuringMachine*> interesting_machines;
     QList<TuringMachine *> search_interesting_machines(int amount,int states,bool not_deleting_only);
 
     int last_search;
-
     bool continue_aux;
 
 

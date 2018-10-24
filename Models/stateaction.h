@@ -26,6 +26,10 @@ public:
     StateAction(QString rendering);
     StateAction(bool write_val,Direction direction_val, QString next_state_val, bool end_action = false);
 
+    bool operator==(const StateAction &other);
+
+    //Getters & Setters
+
     bool getWrite_val() const;
     void setWrite_val(bool value);
 
@@ -35,7 +39,6 @@ public:
     QString getNext_state_val() const;
     void setNext_state_val(const QString &value);
 
-    const QString toString();
 
     bool isEnd_action() const;
     void setEnd_action(bool value);
@@ -45,9 +48,13 @@ public:
     QString getRendering() const;
     void setRendering(const QString &value);
 
+
+    //Show
+
+    const QString toString();
     QJsonObject toJson();
 
-    bool operator==(const StateAction &other);
+    //Helpers
 
     StateAction invertedAction();
 

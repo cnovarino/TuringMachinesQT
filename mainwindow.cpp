@@ -25,21 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     continue_aux = false;
     generator = QRandomGenerator::securelySeeded();
 
-    State test2(QString::number(5));
-
-
-    QList<QString> test;
-    test.append("0");
-    test.append("1");
-    test.append("2");
-    test.append("3");
-    test.append("4");
-    test.append("5");
-    test.append("6");
-    test.append("7");
-
-    qDebug() << test.indexOf(test2.getName());
-
     loadMachines();
 
     for(int i = 0; i< machines.length(); i++){
@@ -184,7 +169,6 @@ QList<TuringMachine*> MainWindow::search_interesting_machines(int amount, int st
 
     for(int i = 0; i < states; i++)
         state_vals.append(QString::number(i));
-//        state_vals.append(QChar(97+i));
 
     QList<QString> actions;
 
@@ -212,15 +196,6 @@ QList<TuringMachine*> MainWindow::search_interesting_machines(int amount, int st
             tmp_zero.validateAction();
             tmp_one.validateAction();
 
-
-
-//            if(not_deleting_only){
-//                while(!tmp_one.getWrite_val()){
-//                   tmp_one = StateAction(actions.at(generator.bounded(0,actions.size())));
-//                   tmp_one.validateAction();
-//                }
-//            }
-
             tmp->addState(state_vals.at(i),tmp_zero,tmp_one,(i == 0));
         }
 
@@ -232,7 +207,6 @@ QList<TuringMachine*> MainWindow::search_interesting_machines(int amount, int st
             row = generator.bounded(0,rows);
         }
 
-
         TuringMachine * tmp_copy = new TuringMachine(tmp);
         State * tmp_state = tmp_copy->getStateAt(row);
 
@@ -241,60 +215,27 @@ QList<TuringMachine*> MainWindow::search_interesting_machines(int amount, int st
         else
             tmp_state->setOn_zero(StateAction::endAction());
 
-//        foreach(TuringMachine *other_machine,temp_machines){
-//            if(tmp_copy->isEquivalent(*other_machine)){
-//                delete tmp_copy;
-//                tmp_copy = nullptr;
-//                break;
-//            }
-//        }
+        foreach(TuringMachine *other_machine,temp_machines){
+            if(tmp_copy->isEquivalent(*other_machine)){
+                delete tmp_copy;
+                tmp_copy = nullptr;
+                break;
+            }
+        }
 
         if(tmp_copy != nullptr){
             tmp_copy->validateStates();
             temp_machines.append(tmp_copy);
         }
 
-//        for(int x = 0; x < cols; x++){
-//            for(int y = 0; y < rows; y++){
-//                if(x+y == 0)
-//                    continue;
-
-//                TuringMachine * tmp_copy = new TuringMachine(tmp);
-//                State * tmp_state = tmp_copy->getStateAt(y);
-
-//                if(x)
-//                    tmp_state->setOn_one(StateAction::endAction());
-//                else
-//                    tmp_state->setOn_zero(StateAction::endAction());
-
-//                foreach(TuringMachine *other_machine,temp_machines){
-//                    if(tmp_copy->isEquivalent(*other_machine)){
-//                        delete tmp_copy;
-//                        tmp_copy = nullptr;
-//                        break;
-//                    }
-//                }
-
-//                if(tmp_copy != nullptr){
-//                    tmp_copy->validateStates();
-//                    temp_machines.append(tmp_copy);
-//                }
-//            }
-//        }
-
         delete tmp;
     }
-
-
-
 
     for(int i = temp_machines.size()-1; i >= 0 ; i--){
 
         TuringMachine *tm = temp_machines.at(i);
 
         QList<QString> vals(state_vals);
-
-
 
         foreach(State* state, tm->getStates()){
             if(!state->getOn_one().isEnd_action()){
@@ -313,7 +254,6 @@ QList<TuringMachine*> MainWindow::search_interesting_machines(int amount, int st
                 }
             }
         }
-
 
         if(vals.size() > 0){
             temp_machines.removeAt(i);
@@ -498,11 +438,6 @@ void MainWindow::on_btnContinue_clicked()
         return;
     }
 
-//    if(last_search == ui->spnInterestingSteps->value()){
-//        QMessageBox::about(this,"Buscar","Aumente el numero de pasos para seguir ejecuando las maquinas pendientes.");
-//        ui->spnInterestingSteps->setFocus();
-//        return;
-//    }
     continue_aux = true;
     on_btnSearch_clicked();
 
