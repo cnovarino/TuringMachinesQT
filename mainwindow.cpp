@@ -184,6 +184,8 @@ QList<TuringMachine*> MainWindow::search_interesting_machines(int amount, int st
 
     for(int generations = amount; generations > 0; generations--){
 
+        qDebug() << generations;
+
         TuringMachine *tmp = new TuringMachine();
         for(int i = 0; i < state_vals.size(); i++){
 
@@ -215,29 +217,9 @@ QList<TuringMachine*> MainWindow::search_interesting_machines(int amount, int st
         else
             tmp_state->setOn_zero(StateAction::endAction());
 
-        foreach(TuringMachine *other_machine,temp_machines){
-            if(tmp_copy->isEquivalent(*other_machine)){
-                delete tmp_copy;
-                tmp_copy = nullptr;
-                break;
-            }
-        }
-
-        if(tmp_copy != nullptr){
-            tmp_copy->validateStates();
-            temp_machines.append(tmp_copy);
-        }
-
-        delete tmp;
-    }
-
-    for(int i = temp_machines.size()-1; i >= 0 ; i--){
-
-        TuringMachine *tm = temp_machines.at(i);
-
         QList<QString> vals(state_vals);
 
-        foreach(State* state, tm->getStates()){
+        foreach(State* state, tmp_copy->getStates()){
             if(!state->getOn_one().isEnd_action()){
                 int index = vals.indexOf(state->getOn_one().getNext_state_val());
 
@@ -256,11 +238,61 @@ QList<TuringMachine*> MainWindow::search_interesting_machines(int amount, int st
         }
 
         if(vals.size() > 0){
-            temp_machines.removeAt(i);
-            delete tm;
+            delete tmp_copy;
+            tmp_copy = nullptr;
+            delete tmp;
+            generations++;
+            continue;
         }
 
+        if(tmp_copy != nullptr){
+            foreach(TuringMachine *other_machine,temp_machines){
+                if(tmp_copy->isEquivalent(*other_machine)){
+                    delete tmp_copy;
+                    tmp_copy = nullptr;
+                    break;
+                }
+            }
+        }
+
+        if(tmp_copy != nullptr){
+            tmp_copy->validateStates();
+            temp_machines.append(tmp_copy);
+        }
+
+        delete tmp;
     }
+
+//    for(int i = temp_machines.size()-1; i >= 0 ; i--){
+
+//        TuringMachine *tm = temp_machines.at(i);
+
+//        QList<QString> vals(state_vals);
+
+//        foreach(State* state, tm->getStates()){
+//            if(!state->getOn_one().isEnd_action()){
+//                int index = vals.indexOf(state->getOn_one().getNext_state_val());
+
+//                if(index != -1){
+//                    vals.removeAt(index);
+//                }
+//            }
+
+//            if(!state->getOn_one().isEnd_action()){
+//                int index = vals.indexOf(state->getOn_zero().getNext_state_val());
+
+//                if(index != -1){
+//                    vals.removeAt(index);
+//                }
+//            }
+//        }
+
+//        if(vals.size() > 0){
+//            temp_machines.removeAt(i);
+//            delete tm;
+//        }
+
+//    }
 
 
     return  temp_machines;

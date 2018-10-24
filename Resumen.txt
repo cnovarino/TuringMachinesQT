@@ -1,0 +1,91 @@
+
+-- Punto 1
+
+A una maquina de turing la defini de la siguiente manera:
+
+Clase StateAction (stateaction.h/.cpp)
+
+Esta clase representaria la instruccion que tiene que seguir la maquina luego de leer la cinta
+y consiste en un valor a escribir, la direccion en la q se va a mover el cursor, y el estado siguiente.
+
+Clase State (state.h/.cpp)
+
+Esta clase contiene el nombre del estado y 2 StateActions, 1 para cuando lee un 0 de la cinta y otro cuando se lee un 1.
+
+Clase TuringMachine (turingmachine.h/.cpp)
+
+aca las principales variables que me definen una maquina son:
+
+cursor (int)  -- Posicion del cursor
+states (QList<State*> http://doc.qt.io/qt-5/qlist.html) -- Lista de estados de la maquina
+initial_state (State*) -- El estan por el que va a iniciar la maquina. No es necesario pero lo defini para probar una misma maquina pero arrancando por distintos lugares
+current_state (State*) -- El estado en el que se encuentra actualmente
+tape (QMap<int,bool> http://doc.qt.io/qt-5/qmap.html) -- Esto podria ser mas optimo utilizando una LinkedList.
+
+
+-- Punto 2
+
+Para mostrar una maquina de turing lo hago de las siguientes formas:
+
+Por tabla (turingmachines.cpp:119)
+
+	 0	 1
+*a	1>b	1<b         -- El asterisco me indica el estado inicial
+b	1<a	FIN
+
+Por JSON (turingmachines.cpp:399)  -- Este metodo no lo muestro en pantalla. solamente lo uso para guardar las maquinas en un archivo.
+
+{"initial_state":{"name": "a","on_one":{"rendering": "1<b"},"on_zero":{"rendering": "1>b"}},"name": "Busy Beaver 2 Estados","states":[{"name": "a","on_one":{"rendering": "1<b"},"on_zero":{"rendering": "1>b"}},{"name": "b","on_one":{"rendering": "FIN"},"on_zero":{"rendering": "1<a"}}]}
+
+En un string serializado (turingmachines.cpp:8)
+cada pipe (|) me separa los estados y adentro separo por (;)
+a;1>b;1<b|b;1<a;FIN
+
+-- Punto 3
+
+La funcion para ejecutar una maquina se llama exec_machine y esta definida en turingmachines.cpp:228.
+esta toma como parametro una cantidad de pasos y un output que puede ser null para imprimir el resultado de la ejecucion.
+
+desde la interfaz estan las opciones para imprimir el estado de la cinta en cada paso y tambien al final de la ejecucion, pero son opcionales.
+
+-- Punto 4
+
+Para este punto yo pido como parametro una cantidad de maquinas, cantidad de estados.
+
+search_interesting_machines mainwindow.cpp:159
+
+Empiezo generando un listado de todas las acciones posibles.
+
+Genero una lista de TuringMachine del tamaño que ingresa por parametro y con la cantidad de pasos elegida.
+y para cada estado le asigno de manera aleatoria una StateAction de la lista que genere al principio
+
+En este paso tambien esta incluido del Punto 6, y si esta seleccionado lista las no borrantes, me fijo q las acciones para cuando lean un 1 no me escriban un 0 en la cinta.
+
+Luego de generar todos los estados con las acciones. Hago otro random para insertar un FIN en alguna de las acciones ya definidas, viendo de no poner el FIN en el 0 del primer estado, porque la maquina dejaria de ser interesante.
+
+Si la maquina me queda con algun estado al cual no se llega de ninguna forma (mirando la tabla solamente) la descarto y paso a generar otra
+(aca se podria ver de implementar de otra forma para no tener que descartar toda la generacion y solamente corregir el problema de la tabla)
+
+Luego comparo la maquina que acabo de agregar contra las anteriores ya generadas para ver si son equivalentes.
+
+-- Punto 5
+
+Luego de generar las maquinas del punto 4 estas se van a ejecutar una cantidad de pasos definida por el usuario. esto siempre se va a ejecutar 
+por lo menos una ves luego de generar las maquinas. Como resultado va a mostrar las maquinas que mas pasos se ejecutaron al finalizar (dentro del paramentro elegido)
+y 2 contadores. 1 con la cantidad de maquinas finalizadas antes de las que mas duraron, y la cantidad de las que se siguen ejecutando.
+Apretando el boton continuar las pendientes de finalizar se van a ejecutar tantos pasos desde el punto en el que habian quedado, para ver si terminan mas adelante.
+
+
+
+Extras:
+
+Opciones para Crear/Modificar maquinas de turing manualmente y ejecutarlas de forma individual para poder ver como se va escribiendo la cinta.
+La opcion de importar una maquina serializada (Por ejemplo las interesantes devueltas por el punto 5).
+Persistencia de las maquinas agregadas en un archivo machines.json.
+Generacion del codigo QR de una maquina serializada. (https://github.com/nayuki/QR-Code-generator)
+
+
+Android:
+
+Una aplicacion que lee el codigo QR generado y carga un objeto TuringMachine definido en Java,
+y la opcion de ejecutarla una cantidad de pasos.

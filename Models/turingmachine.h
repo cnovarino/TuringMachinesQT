@@ -97,6 +97,7 @@ public:
 private:
     QString name;
     int step;
+
     int cursor;
     State* initial_state;
     State* current_state;
