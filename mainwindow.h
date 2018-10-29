@@ -41,6 +41,8 @@ private slots:
     void onUpdatePendingLabel(int val);
     void onUpdateCompletedLabel(int val);
 
+    void on_btnReset_clicked();
+
 private:
     Ui::MainWindow *ui;
     TuringMachineController controller;

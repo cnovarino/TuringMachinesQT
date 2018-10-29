@@ -1,0 +1,8 @@
+debug/
+object_script.TuringMachines.Release
+object_script.TuringMachines.Debug
+machines.json
+Makefile.Release
+Makefile.Debug
+Makefile
+.qmake.stash

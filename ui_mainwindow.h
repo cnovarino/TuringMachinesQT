@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.11.2
+** Created by: Qt User Interface Compiler version 5.10.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,12 +10,15 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
+#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
@@ -31,7 +34,7 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralWidget;
-    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *verticalLayout_3;
     QHBoxLayout *horizontalLayout_5;
     QHBoxLayout *horizontalLayout;
     QLabel *label;
@@ -42,11 +45,7 @@ public:
     QSpacerItem *horizontalSpacer_2;
     QPushButton *btnShowQR;
     QTextBrowser *tbConsole;
-    QHBoxLayout *horizontalLayout_4;
-    QPushButton *btnReset;
-    QPushButton *btnClearLog;
-    QSpacerItem *horizontalSpacer_3;
-    QHBoxLayout *horizontalLayout_8;
+    QHBoxLayout *horizontalLayout_6;
     QGroupBox *groupBox;
     QGridLayout *gridLayout;
     QLabel *label_6;
@@ -62,28 +61,31 @@ public:
     QHBoxLayout *horizontalLayout_3;
     QPushButton *btnSearch;
     QPushButton *btnContinue;
-    QVBoxLayout *verticalLayout_6;
+    QHBoxLayout *horizontalLayout_4;
+    QVBoxLayout *verticalLayout;
+    QSpacerItem *verticalSpacer_2;
+    QCheckBox *chkPrintSteps;
+    QCheckBox *chkPrintFinalTape;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_4;
     QSpinBox *spnSteps;
-    QVBoxLayout *verticalLayout;
+    QVBoxLayout *verticalLayout_2;
+    QSpacerItem *verticalSpacer;
+    QPushButton *btnClearLog;
+    QPushButton *btnReset;
     QPushButton *btnExecute;
-    QHBoxLayout *horizontalLayout_6;
-    QVBoxLayout *verticalLayout_5;
-    QCheckBox *chkPrintSteps;
-    QCheckBox *chkPrintFinalTape;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(598, 539);
+        MainWindow->resize(599, 445);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        verticalLayout_2 = new QVBoxLayout(centralWidget);
-        verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        verticalLayout_3 = new QVBoxLayout(centralWidget);
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
@@ -129,36 +131,16 @@ public:
         horizontalLayout_5->addWidget(btnShowQR);
 
 
-        verticalLayout_2->addLayout(horizontalLayout_5);
+        verticalLayout_3->addLayout(horizontalLayout_5);
 
         tbConsole = new QTextBrowser(centralWidget);
         tbConsole->setObjectName(QStringLiteral("tbConsole"));
 
-        verticalLayout_2->addWidget(tbConsole);
+        verticalLayout_3->addWidget(tbConsole);
 
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setSpacing(6);
-        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        btnReset = new QPushButton(centralWidget);
-        btnReset->setObjectName(QStringLiteral("btnReset"));
-
-        horizontalLayout_4->addWidget(btnReset);
-
-        btnClearLog = new QPushButton(centralWidget);
-        btnClearLog->setObjectName(QStringLiteral("btnClearLog"));
-
-        horizontalLayout_4->addWidget(btnClearLog);
-
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_4->addItem(horizontalSpacer_3);
-
-
-        verticalLayout_2->addLayout(horizontalLayout_4);
-
-        horizontalLayout_8 = new QHBoxLayout();
-        horizontalLayout_8->setSpacing(6);
-        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setSpacing(6);
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
         groupBox = new QGroupBox(centralWidget);
         groupBox->setObjectName(QStringLiteral("groupBox"));
         gridLayout = new QGridLayout(groupBox);
@@ -245,11 +227,28 @@ public:
         gridLayout->addLayout(horizontalLayout_3, 4, 0, 1, 3);
 
 
-        horizontalLayout_8->addWidget(groupBox);
+        horizontalLayout_6->addWidget(groupBox);
 
-        verticalLayout_6 = new QVBoxLayout();
-        verticalLayout_6->setSpacing(6);
-        verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalSpacer_2 = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+        verticalLayout->addItem(verticalSpacer_2);
+
+        chkPrintSteps = new QCheckBox(centralWidget);
+        chkPrintSteps->setObjectName(QStringLiteral("chkPrintSteps"));
+
+        verticalLayout->addWidget(chkPrintSteps);
+
+        chkPrintFinalTape = new QCheckBox(centralWidget);
+        chkPrintFinalTape->setObjectName(QStringLiteral("chkPrintFinalTape"));
+
+        verticalLayout->addWidget(chkPrintFinalTape);
+
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
@@ -265,49 +264,49 @@ public:
 
         horizontalLayout_2->addWidget(spnSteps);
 
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setSpacing(6);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+
+        verticalLayout->addLayout(horizontalLayout_2);
+
+
+        horizontalLayout_4->addLayout(verticalLayout);
+
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        verticalSpacer = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+        verticalLayout_2->addItem(verticalSpacer);
+
+        btnClearLog = new QPushButton(centralWidget);
+        btnClearLog->setObjectName(QStringLiteral("btnClearLog"));
+
+        verticalLayout_2->addWidget(btnClearLog);
+
+        btnReset = new QPushButton(centralWidget);
+        btnReset->setObjectName(QStringLiteral("btnReset"));
+
+        verticalLayout_2->addWidget(btnReset);
+
         btnExecute = new QPushButton(centralWidget);
         btnExecute->setObjectName(QStringLiteral("btnExecute"));
-        btnExecute->setMinimumSize(QSize(120, 0));
-        btnExecute->setMaximumSize(QSize(120, 16777215));
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(btnExecute->sizePolicy().hasHeightForWidth());
+        btnExecute->setSizePolicy(sizePolicy);
+        btnExecute->setMinimumSize(QSize(0, 0));
+        btnExecute->setMaximumSize(QSize(16777215, 16777215));
 
-        verticalLayout->addWidget(btnExecute);
-
-
-        horizontalLayout_2->addLayout(verticalLayout);
-
-
-        verticalLayout_6->addLayout(horizontalLayout_2);
-
-        horizontalLayout_6 = new QHBoxLayout();
-        horizontalLayout_6->setSpacing(6);
-        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
-        verticalLayout_5 = new QVBoxLayout();
-        verticalLayout_5->setSpacing(6);
-        verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
-        chkPrintSteps = new QCheckBox(centralWidget);
-        chkPrintSteps->setObjectName(QStringLiteral("chkPrintSteps"));
-
-        verticalLayout_5->addWidget(chkPrintSteps);
-
-        chkPrintFinalTape = new QCheckBox(centralWidget);
-        chkPrintFinalTape->setObjectName(QStringLiteral("chkPrintFinalTape"));
-
-        verticalLayout_5->addWidget(chkPrintFinalTape);
+        verticalLayout_2->addWidget(btnExecute);
 
 
-        horizontalLayout_6->addLayout(verticalLayout_5);
+        horizontalLayout_4->addLayout(verticalLayout_2);
 
 
-        verticalLayout_6->addLayout(horizontalLayout_6);
+        horizontalLayout_6->addLayout(horizontalLayout_4);
 
 
-        horizontalLayout_8->addLayout(verticalLayout_6);
-
-
-        verticalLayout_2->addLayout(horizontalLayout_8);
+        verticalLayout_3->addLayout(horizontalLayout_6);
 
         MainWindow->setCentralWidget(centralWidget);
 
@@ -324,8 +323,6 @@ public:
         btnAddMachine->setText(QApplication::translate("MainWindow", "Crear Maquina", nullptr));
         btnShowTable->setText(QApplication::translate("MainWindow", "Mostrar Tabla", nullptr));
         btnShowQR->setText(QApplication::translate("MainWindow", "Ver QR", nullptr));
-        btnReset->setText(QApplication::translate("MainWindow", "Reiniciar Maquina", nullptr));
-        btnClearLog->setText(QApplication::translate("MainWindow", "Limpiar Log", nullptr));
         groupBox->setTitle(QApplication::translate("MainWindow", "Maquinas Interesantes", nullptr));
         label_6->setText(QApplication::translate("MainWindow", "Cantidad:", nullptr));
         label_5->setText(QApplication::translate("MainWindow", "Estados:", nullptr));
@@ -335,10 +332,12 @@ public:
         lblPending->setText(QApplication::translate("MainWindow", "Pendientes: 0", nullptr));
         btnSearch->setText(QApplication::translate("MainWindow", "Buscar", nullptr));
         btnContinue->setText(QApplication::translate("MainWindow", "Continuar", nullptr));
-        label_4->setText(QApplication::translate("MainWindow", "Pasos:", nullptr));
-        btnExecute->setText(QApplication::translate("MainWindow", "Ejecutar Maquina", nullptr));
         chkPrintSteps->setText(QApplication::translate("MainWindow", "Imprimir Pasos", nullptr));
         chkPrintFinalTape->setText(QApplication::translate("MainWindow", "Imprimir Cinta Final", nullptr));
+        label_4->setText(QApplication::translate("MainWindow", "Pasos:", nullptr));
+        btnClearLog->setText(QApplication::translate("MainWindow", "Limpiar Log", nullptr));
+        btnReset->setText(QApplication::translate("MainWindow", "Reiniciar y Ejecutar", nullptr));
+        btnExecute->setText(QApplication::translate("MainWindow", "Ejecutar Maquina", nullptr));
     } // retranslateUi
 
 };

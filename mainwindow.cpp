@@ -156,3 +156,12 @@ void MainWindow::onUpdateCompletedLabel(int val)
 {
     ui->lblCompleted->setText("Finalizadas: " + QString::number(val));
 }
+
+void MainWindow::on_btnReset_clicked()
+{
+    if(controller.getSelected_tm() == nullptr)
+        return;
+
+    controller.resetCurrentMachine();
+    controller.execMachine(controller.getSelected_tm(),ui->spnSteps->value());
+}
