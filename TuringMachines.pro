@@ -34,7 +34,8 @@ SOURCES += \
     machineimporterform.cpp \
     QR/BitBuffer.cpp \
     QR/QrCode.cpp \
-    QR/QrSegment.cpp
+    QR/QrSegment.cpp \
+    Controllers/turingmachinecontroller.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -47,7 +48,8 @@ HEADERS += \
     machineimporterform.h \
     QR/BitBuffer.hpp \
     QR/QrCode.hpp \
-    QR/QrSegment.hpp
+    QR/QrSegment.hpp \
+    Controllers/turingmachinecontroller.h
 
 FORMS += \
         mainwindow.ui \

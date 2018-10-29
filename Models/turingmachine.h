@@ -33,7 +33,6 @@ public:
         EmptyMachine = 5
     };
 
-    static QString serialize(TuringMachine &tm);
     static TuringMachine*  deserialize(QString string);
 
     TuringMachine();
@@ -61,6 +60,7 @@ public:
     void setInitial_state(State *value);
 
     bool getExec_finished() const;
+    void setExec_finished(bool value);
 
     bool getPrint_steps() const;
     void setPrint_steps(bool value);
@@ -69,13 +69,26 @@ public:
     void setPrint_final_tape(bool value);
 
     int getStep() const;
+    void setStep(int value);
+
+    bool getExec_error() const;
+    void setExec_error(bool value);
+
+    bool getExec_paused() const;
+    void setExec_paused(bool value);
+
+    QMap<int, bool> getTape() const;
+    void setTape(const QMap<int, bool> &value);
+
+    int getCursor() const;
+    void setCursor(int value);
 
     //Show
 
     const QString toTable();
     QJsonObject toJson();
     QString printTape();
-    void print_final_state(QTextBrowser *output);
+    QString print_final_state();
 
     //Modifiers
     void resetMachine();
@@ -83,9 +96,9 @@ public:
     bool updateState(State* new_state, bool initial_state = false);    
     bool removeState(State*);
 
-    //Helpers
+    void tapeInsert(int pos,bool val);
 
-    void exec_machine(int steps, QTextBrowser *output);
+    //Helpers
 
     MachineError validateMachine(QString &error);
     void validateStates();
@@ -93,6 +106,11 @@ public:
     bool contains(State*);
     bool itsNotDeleting();
     bool isEquivalent(TuringMachine &other);
+
+    QString serialize();
+
+
+
 
 private:
     QString name;

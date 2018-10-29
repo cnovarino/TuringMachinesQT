@@ -4,15 +4,16 @@
 #include <QTextBrowser>
 #include <QJsonValue>
 #include <QElapsedTimer>
+//#include <QStringBuilder>
 
-QString TuringMachine::serialize(TuringMachine &tm)
+QString TuringMachine::serialize()
 {
-    if(tm.getStatesCount() == 0)
+    if(getStatesCount() == 0)
         return "";
 
     QString result = "";
 
-    foreach(State* state, tm.getStates()){
+    foreach(State* state, getStates()){
         result.append(state->getName());
         result.append(";");
         if(state->getOn_zero().isEnd_action())
@@ -30,6 +31,56 @@ QString TuringMachine::serialize(TuringMachine &tm)
     result.remove(result.length()-1,1);
 
     return result;
+}
+
+void TuringMachine::setExec_error(bool value)
+{
+    exec_error = value;
+}
+
+void TuringMachine::setExec_paused(bool value)
+{
+    exec_paused = value;
+}
+
+void TuringMachine::setExec_finished(bool value)
+{
+    exec_finished = value;
+}
+
+int TuringMachine::getCursor() const
+{
+    return cursor;
+}
+
+void TuringMachine::setCursor(int value)
+{
+    cursor = value;
+}
+
+QMap<int, bool> TuringMachine::getTape() const
+{
+    return tape;
+}
+
+void TuringMachine::setTape(const QMap<int, bool> &value)
+{
+    tape = value;
+}
+
+bool TuringMachine::getExec_error() const
+{
+    return exec_error;
+}
+
+bool TuringMachine::getExec_paused() const
+{
+    return exec_paused;
+}
+
+void TuringMachine::setStep(int value)
+{
+    step = value;
 }
 
 TuringMachine *TuringMachine::deserialize(QString string)
@@ -225,67 +276,6 @@ void TuringMachine::validateStates()
 
 }
 
-void TuringMachine::exec_machine(int steps, QTextBrowser *output)
-{
-
-    if(initial_state == nullptr){
-        if(output != nullptr)
-            output->append("La maquina no tiene un estado inicial definido. Modifiquela.");
-        return;
-    }
-
-    QElapsedTimer elapsed_timer;
-    elapsed_timer.start();
-
-    while (!exec_error && !exec_finished && (steps--) > 0) {
-
-        if(print_steps)
-            if(output != nullptr)
-                output->append("Paso " + QString::number(step) + ": " + printTape());
-
-        step++;
-
-        StateAction action = current_state->getAction(static_cast<int>(tape.value(cursor)));
-
-        if(action.isEnd_action()){
-            if(output != nullptr)
-                print_final_state(output);
-            exec_finished = true;
-
-            continue;
-        }
-
-        tape.insert(cursor,action.getWrite_val());
-        cursor += action.getDirection_val();
-
-        if(!tape.contains(cursor))
-            tape.insert(cursor,0);
-
-        current_state = getState(action.getNext_state_val());
-
-        if(current_state == nullptr){
-            if(output != nullptr)
-                output->append("Error de ejecucion en el paso " + QString::number(step) + ". COMO PASO ?<br>");
-            exec_error = true;
-            continue;
-        }
-
-    }
-
-    if(steps == -1 && !exec_finished && !exec_error){
-        if(output != nullptr){
-            output->append("La maquina " + name + " sigue ejecutandose despues de " + QString::number(step) + " pasos. Presione ejecutar nuevamente para continuar.");
-            output->append("Posicion del Cursor " + QString::number(cursor));
-            if(print_final_tape)
-                output->append("Cinta " + printTape());
-        }
-    }
-
-    if(output != nullptr)
-        output->append("<b>Duración: " + TimeHelper::print_elapsed_time(elapsed_timer.nsecsElapsed()) + "</b><br>");
-
-}
-
 QString TuringMachine::getName() const
 {
     return name;
@@ -370,6 +360,11 @@ bool TuringMachine::removeState(State *state)
     }
 }
 
+void TuringMachine::tapeInsert(int pos, bool val)
+{
+    tape.insert(pos,val);
+}
+
 QString TuringMachine::printTape()
 {
     QString result = "";
@@ -380,6 +375,18 @@ QString TuringMachine::printTape()
         if(key == cursor)
             result.append("<b><u>" + current_state->getName() + "</u></b>");
     }
+
+    return result;
+}
+
+QString TuringMachine::print_final_state()
+{
+    QString result = "";
+
+    if(exec_finished)
+        result += "La maquina " + name + " finalizo su ejecucion en el paso " + QString::number(step);
+    else
+        result += "La maquina " + name + " sigue ejecutandose luego de " + QString::number(step) + " pasos.";
 
     return result;
 }
@@ -465,17 +472,6 @@ bool TuringMachine::itsNotDeleting()
     return not_deleting;
 }
 
-void TuringMachine::print_final_state(QTextBrowser *output)
-{
-    if(exec_finished)
-        output->append("La maquina " + name + " finalizo su ejecucion en el paso " + QString::number(step));
-    else
-        output->append("La maquina " + name + " sigue ejecutandose luego de " + QString::number(step) + " pasos.");
-    output->append("Posicion del Cursor " + QString::number(cursor));
-    if(print_final_tape)
-        output->append("Cinta " + printTape() + "<br>");
-}
-
 int TuringMachine::getStep() const
 {
     return step;
@@ -503,4 +499,5 @@ bool TuringMachine::isEquivalent(TuringMachine &other)
     return true;
 
 }
+
 
