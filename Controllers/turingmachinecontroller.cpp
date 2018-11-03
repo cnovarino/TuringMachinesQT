@@ -243,92 +243,61 @@ void TuringMachineController::generateRandomMachines(int amount, int states, boo
 
     for(int generations = amount; generations > 0; generations--){
 
+        QList<QString> pending_states = state_vals; // Uso el array para asegurarme que cada estado esta al menos una ves en la tabla
         TuringMachine *tmp = new TuringMachine();
         for(int i = 0; i < state_vals.size(); i++){
 
-            StateAction tmp_zero;
-            tmp_zero.setWrite_val(static_cast<bool>(generator.bounded(2)));
-
-            if(i == 0){ // (A,0) x>B
-                tmp_zero.setDirection_val(StateAction::Direction::Rigth);
-                tmp_zero.setNext_state_val(state_vals.at(1));
-            }else{
-                tmp_zero.setDirection_val(static_cast<bool>(generator.bounded(2)) == 0 ? StateAction::Direction::Left : StateAction::Direction::Rigth);
-                tmp_zero.setNext_state_val(state_vals.at(generator.bounded(0,state_vals.size())));
-            }
-
-
-
-            tmp_zero.updateRender();
-
+            StateAction tmp_zero;            
             StateAction tmp_one;
 
-            if(not_deleting_only)
+            tmp_zero.setWrite_val(static_cast<bool>(generator.bounded(2)));
+            tmp_zero.setDirection_val(static_cast<bool>(generator.bounded(2)) == 0 ? StateAction::Direction::Left : StateAction::Direction::Rigth);
+
+            if(not_deleting_only) // No borrantes
                 tmp_one.setWrite_val(1);
             else
                 tmp_one.setWrite_val(static_cast<bool>(generator.bounded(2)));
 
             tmp_one.setDirection_val(static_cast<bool>(generator.bounded(2)) == 0 ? StateAction::Direction::Left : StateAction::Direction::Rigth);
-            tmp_one.setNext_state_val(state_vals.at(generator.bounded(0,state_vals.size())));
+
+            if(i == 0){// Estado A
+                tmp_zero.setDirection_val(StateAction::Direction::Rigth);
+                tmp_zero.setNext_state_val(pending_states.takeAt(1));
+
+                tmp_one.setNext_state_val(state_vals.at(generator.bounded(0,state_vals.size())));
+
+            } else if (i == state_vals.size()-1){  // Ultimo estado
+                int col = generator.bounded(0,cols);
+
+                if(col){
+                    tmp_one = StateAction::endAction();
+                    tmp_zero.setNext_state_val(pending_states.takeAt(generator.bounded(0,pending_states.size())));//Estado de la lista de pendientes
+
+                }else{
+                    tmp_zero = StateAction::endAction();
+                    tmp_one.setNext_state_val(pending_states.takeAt(generator.bounded(0,pending_states.size())));//Estado de la lista de pendientes
+                }
+
+            }else{
+
+                if(generator.bounded(2)){
+                    tmp_zero.setNext_state_val(state_vals.at(generator.bounded(0,state_vals.size()))); //Estado random
+                    tmp_one.setNext_state_val(pending_states.takeAt(generator.bounded(0,pending_states.size()))); //Estado de la lista de pendientes
+
+                }else{
+                    tmp_zero.setNext_state_val(pending_states.takeAt(generator.bounded(0,pending_states.size()))); //Estado de la lista de pendientes
+                    tmp_one.setNext_state_val(state_vals.at(generator.bounded(0,state_vals.size()))); //Estado random
+                }
+
+            }
+
+            tmp_zero.updateRender();
             tmp_one.updateRender();
 
             tmp->addState(state_vals.at(i),tmp_zero,tmp_one,(i == 0));
         }
 
-        //Agrego el FIN al ultimo estado
-        int col = generator.bounded(0,cols);
-
-        if(col)
-            tmp->getStates().last()->setOn_one(StateAction::endAction());
-        else
-            tmp->getStates().last()->setOn_zero(StateAction::endAction());
-
-//        QList<QString> vals(state_vals);
-
-//        foreach(State* state, tmp_copy->getStates()){
-//            if(!state->getOn_one().isEnd_action()){
-//                int index = vals.indexOf(state->getOn_one().getNext_state_val());
-
-//                if(index != -1){
-//                    vals.removeAt(index);
-//                }
-//            }
-
-//            if(!state->getOn_one().isEnd_action()){
-//                int index = vals.indexOf(state->getOn_zero().getNext_state_val());
-
-//                if(index != -1){
-//                    vals.removeAt(index);
-//                }
-//            }
-//        }
-
-//        if(vals.size() > 0){
-//            delete tmp_copy;
-//            tmp_copy = nullptr;
-//            delete tmp;
-//            generations++;
-//            continue;
-//        }
-
-//        if(tmp_copy != nullptr){
-//            foreach(TuringMachine *other_machine,interesting_machines){
-//                if(tmp_copy->isEquivalent(*other_machine)){
-//                    delete tmp_copy;
-//                    tmp_copy = nullptr;
-//                    break;
-//                }
-//            }
-//        }
-
-//        if(tmp_copy != nullptr){
-//            tmp_copy->validateStates();
-//            interesting_machines.append(tmp_copy);
-//        }
-
         interesting_machines.append(tmp);
-
-//        delete tmp;
     }
 
     emit consolePrint("<b>Duración: " + TimeHelper::print_elapsed_time(elapsed_timer.nsecsElapsed()) + "</b><br>");
