@@ -20,7 +20,7 @@ public:
     TuringMachine *getSelected_tm() const;
     QList<TuringMachine *> getMachines() const;
 
-    void execMachine(TuringMachine *tm, int steps);
+    void execMachine(TuringMachine *tm, int steps,bool normalize = false);
 
     bool getPrint_steps() const;
     void setPrint_steps(bool value);
@@ -35,22 +35,24 @@ public:
 
     int getLast_search() const;
 
+    void listPendingMachines();
+
 private:
     QRandomGenerator generator;
 
     TuringMachine *selected_tm;
     QList<TuringMachine*> machines;
-
     QList<TuringMachine*> interesting_machines;
-    void generateRandomMachines(int amount,int states,bool not_deleting_only);
 
     int last_search;
-    bool continue_aux;    
+    bool continue_aux;
 
     bool print_steps = false;
     bool print_final_tape = false;
-
     bool silent_mode = false;
+
+    void generateRandomMachines(int amount,int states,bool not_deleting_only);
+    void normalize(TuringMachine *tm,QList<QString> reached_states);
 
 signals:
 

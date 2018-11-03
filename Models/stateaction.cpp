@@ -146,3 +146,18 @@ StateAction StateAction::invertedAction()
     return  inverted;
 }
 
+void StateAction::updateRender()
+{
+    if(isEnd_action()){
+        rendering = "FIN";
+        return;
+    }
+
+    rendering = "";
+    rendering += getWrite_val() ? "1" : "0";
+    rendering += getDirection_val() == Direction::Left ? "<" : ">";
+    rendering += getNext_state_val();
+
+    return;
+}
+

@@ -163,5 +163,14 @@ void MainWindow::on_btnReset_clicked()
         return;
 
     controller.resetCurrentMachine();
+
+    controller.setPrint_steps(ui->chkPrintSteps->isChecked());
+    controller.setPrint_final_tape(ui->chkPrintFinalTape->isChecked());
+
     controller.execMachine(controller.getSelected_tm(),ui->spnSteps->value());
+}
+
+void MainWindow::on_pbListPending_clicked()
+{
+    controller.listPendingMachines();
 }

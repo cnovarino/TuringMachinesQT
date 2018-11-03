@@ -57,6 +57,7 @@ public:
     //Helpers
 
     StateAction invertedAction();
+    void updateRender();
 
 private:
     QString rendering;

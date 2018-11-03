@@ -170,7 +170,8 @@ int TuringMachine::getStatesCount()
 const QString TuringMachine::toTable()
 {
     QString table = "";
-    table.append(QString("\t 0\t 1\n"));
+//    table.append("Estados: " + QString::number(states.size()) + "\n");
+    table.append(QString("Estados: " + QString::number(states.size()) + "\t 0\t 1\n"));
     foreach (State * state, states) {
 
         if(initial_state != nullptr)

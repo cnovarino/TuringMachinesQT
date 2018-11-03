@@ -129,13 +129,20 @@ QList<TuringMachine *> TuringMachineController::getMachines() const
     return machines;
 }
 
-void TuringMachineController::execMachine(TuringMachine *tm, int steps)
-{
+void TuringMachineController::execMachine(TuringMachine *tm, int steps, bool normalize)
+{    
+
     if(tm->getInitial_state() == nullptr){
         if(!silent_mode)
             emit consolePrint("La maquina no tiene un estado inicial definido. Modifiquela.");
         return;
     }
+
+    QList<QString> reached_states;
+
+    if(normalize)
+        reached_states.append(tm->getInitial_state()->getName());
+
 
     QElapsedTimer elapsed_timer;
     elapsed_timer.start();
@@ -159,6 +166,9 @@ void TuringMachineController::execMachine(TuringMachine *tm, int steps)
 
             tm->setExec_finished(true);
 
+            if(normalize)
+                this->normalize(tm,reached_states);
+
             continue;
         }
 
@@ -176,6 +186,10 @@ void TuringMachineController::execMachine(TuringMachine *tm, int steps)
                 emit consolePrint("Error de ejecucion en el paso " + QString::number(tm->getStep()) + ". COMO PASO ?<br>");
             tm->setExec_error(true);
             continue;
+        }
+
+        if(normalize && !reached_states.contains(tm->getCurrent_state()->getName())){
+            reached_states.append(tm->getCurrent_state()->getName());
         }
 
     }
@@ -217,113 +231,132 @@ void TuringMachineController::resetCurrentMachine()
 
 void TuringMachineController::generateRandomMachines(int amount, int states, bool not_deleting_only)
 {
-    QList<QString> write_vals;
-    write_vals.append("0");
-    write_vals.append("1");
-    QList<QString> direction_vals;
-    direction_vals.append("<");
-    direction_vals.append(">");
+    QElapsedTimer elapsed_timer;
+    elapsed_timer.start();
+
     QList<QString> state_vals;
 
     for(int i = 0; i < states; i++)
         state_vals.append(QString::number(i));
 
-    QList<QString> actions;
-
-    foreach(QString write_val, write_vals)
-        foreach(QString direction_val, direction_vals)
-            foreach(QString state_val, state_vals)
-                actions.append(write_val+direction_val+state_val);
-
-
     int cols = 2;
-    int rows = state_vals.size();
 
     for(int generations = amount; generations > 0; generations--){
-
-        qDebug() << generations;
 
         TuringMachine *tmp = new TuringMachine();
         for(int i = 0; i < state_vals.size(); i++){
 
-            StateAction tmp_zero = StateAction(actions.at(generator.bounded(0,actions.size())));
-            StateAction tmp_one = StateAction(actions.at(generator.bounded(0,actions.size())));
+            StateAction tmp_zero;
+            tmp_zero.setWrite_val(static_cast<bool>(generator.bounded(2)));
+
+            if(i == 0){ // (A,0) x>B
+                tmp_zero.setDirection_val(StateAction::Direction::Rigth);
+                tmp_zero.setNext_state_val(state_vals.at(1));
+            }else{
+                tmp_zero.setDirection_val(static_cast<bool>(generator.bounded(2)) == 0 ? StateAction::Direction::Left : StateAction::Direction::Rigth);
+                tmp_zero.setNext_state_val(state_vals.at(generator.bounded(0,state_vals.size())));
+            }
+
+
+
+            tmp_zero.updateRender();
+
+            StateAction tmp_one;
 
             if(not_deleting_only)
-                tmp_one.setRendering(tmp_one.getRendering().replace(0,1,'1'));
+                tmp_one.setWrite_val(1);
+            else
+                tmp_one.setWrite_val(static_cast<bool>(generator.bounded(2)));
 
-            tmp_zero.validateAction();
-            tmp_one.validateAction();
+            tmp_one.setDirection_val(static_cast<bool>(generator.bounded(2)) == 0 ? StateAction::Direction::Left : StateAction::Direction::Rigth);
+            tmp_one.setNext_state_val(state_vals.at(generator.bounded(0,state_vals.size())));
+            tmp_one.updateRender();
 
             tmp->addState(state_vals.at(i),tmp_zero,tmp_one,(i == 0));
         }
 
-        int col = 0;
-        int row = 0;
-
-        while(col+row == 0){
-            col = generator.bounded(0,cols);
-            row = generator.bounded(0,rows);
-        }
-
-        TuringMachine * tmp_copy = new TuringMachine(tmp);
-        State * tmp_state = tmp_copy->getStateAt(row);
+        //Agrego el FIN al ultimo estado
+        int col = generator.bounded(0,cols);
 
         if(col)
-            tmp_state->setOn_one(StateAction::endAction());
+            tmp->getStates().last()->setOn_one(StateAction::endAction());
         else
-            tmp_state->setOn_zero(StateAction::endAction());
+            tmp->getStates().last()->setOn_zero(StateAction::endAction());
 
-        QList<QString> vals(state_vals);
+//        QList<QString> vals(state_vals);
 
-        foreach(State* state, tmp_copy->getStates()){
-            if(!state->getOn_one().isEnd_action()){
-                int index = vals.indexOf(state->getOn_one().getNext_state_val());
+//        foreach(State* state, tmp_copy->getStates()){
+//            if(!state->getOn_one().isEnd_action()){
+//                int index = vals.indexOf(state->getOn_one().getNext_state_val());
 
-                if(index != -1){
-                    vals.removeAt(index);
-                }
-            }
+//                if(index != -1){
+//                    vals.removeAt(index);
+//                }
+//            }
 
-            if(!state->getOn_one().isEnd_action()){
-                int index = vals.indexOf(state->getOn_zero().getNext_state_val());
+//            if(!state->getOn_one().isEnd_action()){
+//                int index = vals.indexOf(state->getOn_zero().getNext_state_val());
 
-                if(index != -1){
-                    vals.removeAt(index);
-                }
-            }
-        }
+//                if(index != -1){
+//                    vals.removeAt(index);
+//                }
+//            }
+//        }
 
-        if(vals.size() > 0){
-            delete tmp_copy;
-            tmp_copy = nullptr;
-            delete tmp;
-            generations++;
-            continue;
-        }
+//        if(vals.size() > 0){
+//            delete tmp_copy;
+//            tmp_copy = nullptr;
+//            delete tmp;
+//            generations++;
+//            continue;
+//        }
 
-        if(tmp_copy != nullptr){
-            foreach(TuringMachine *other_machine,interesting_machines){
-                if(tmp_copy->isEquivalent(*other_machine)){
-                    delete tmp_copy;
-                    tmp_copy = nullptr;
-                    break;
-                }
-            }
-        }
+//        if(tmp_copy != nullptr){
+//            foreach(TuringMachine *other_machine,interesting_machines){
+//                if(tmp_copy->isEquivalent(*other_machine)){
+//                    delete tmp_copy;
+//                    tmp_copy = nullptr;
+//                    break;
+//                }
+//            }
+//        }
 
-        if(tmp_copy != nullptr){
-            tmp_copy->validateStates();
-            interesting_machines.append(tmp_copy);
-        }
+//        if(tmp_copy != nullptr){
+//            tmp_copy->validateStates();
+//            interesting_machines.append(tmp_copy);
+//        }
 
-        delete tmp;
+        interesting_machines.append(tmp);
+
+//        delete tmp;
+    }
+
+    emit consolePrint("<b>Duración: " + TimeHelper::print_elapsed_time(elapsed_timer.nsecsElapsed()) + "</b><br>");
+}
+
+void TuringMachineController::normalize(TuringMachine *tm, QList<QString> reached_states)
+{
+    for(int i = tm->getStates().size()-1; i >= 0; i--){
+        State * state = tm->getStateAt(i);
+        if(!reached_states.contains(state->getName()))
+            tm->removeState(state);
     }
 }
 
 int TuringMachineController::getLast_search() const
 {
     return last_search;
+}
+
+void TuringMachineController::listPendingMachines()
+{
+    if(interesting_machines.size() == 0)
+        emit consolePrint("No hay maquinas pendientes de ejecución.");
+    else{
+        foreach(TuringMachine *tm , interesting_machines){
+            emit consolePrint(tm->toTable());
+        }
+    }
 }
 
 bool TuringMachineController::getContinue_aux() const
@@ -373,7 +406,7 @@ void TuringMachineController::filterInterestingMachines(int steps,int amount, in
             if(tm->getExec_finished())
                 continue;
 
-            execMachine(tm,steps);
+            execMachine(tm,steps,true);
 
             if(tm->getExec_finished()){
                 if(tm->getStep() > max_steps){

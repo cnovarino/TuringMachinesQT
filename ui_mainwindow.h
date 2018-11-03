@@ -15,6 +15,7 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
@@ -45,7 +46,7 @@ public:
     QSpacerItem *horizontalSpacer_2;
     QPushButton *btnShowQR;
     QTextBrowser *tbConsole;
-    QHBoxLayout *horizontalLayout_6;
+    QHBoxLayout *horizontalLayout_3;
     QGroupBox *groupBox;
     QGridLayout *gridLayout;
     QLabel *label_6;
@@ -55,12 +56,13 @@ public:
     QCheckBox *chkNotDeleting;
     QLabel *label_7;
     QSpinBox *spnInterestingSteps;
+    QFormLayout *formLayout;
+    QPushButton *btnSearch;
+    QPushButton *btnContinue;
+    QPushButton *pbListPending;
     QHBoxLayout *horizontalLayout_7;
     QLabel *lblCompleted;
     QLabel *lblPending;
-    QHBoxLayout *horizontalLayout_3;
-    QPushButton *btnSearch;
-    QPushButton *btnContinue;
     QHBoxLayout *horizontalLayout_4;
     QVBoxLayout *verticalLayout;
     QSpacerItem *verticalSpacer_2;
@@ -79,7 +81,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(599, 445);
+        MainWindow->resize(560, 455);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         verticalLayout_3 = new QVBoxLayout(centralWidget);
@@ -138,9 +140,9 @@ public:
 
         verticalLayout_3->addWidget(tbConsole);
 
-        horizontalLayout_6 = new QHBoxLayout();
-        horizontalLayout_6->setSpacing(6);
-        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
         groupBox = new QGroupBox(centralWidget);
         groupBox->setObjectName(QStringLiteral("groupBox"));
         gridLayout = new QGridLayout(groupBox);
@@ -167,7 +169,7 @@ public:
 
         spnStates = new QSpinBox(groupBox);
         spnStates->setObjectName(QStringLiteral("spnStates"));
-        spnStates->setMinimum(1);
+        spnStates->setMinimum(2);
         spnStates->setMaximum(50000000);
         spnStates->setValue(2);
 
@@ -190,6 +192,31 @@ public:
 
         gridLayout->addWidget(spnInterestingSteps, 2, 2, 1, 1);
 
+        formLayout = new QFormLayout();
+        formLayout->setSpacing(6);
+        formLayout->setObjectName(QStringLiteral("formLayout"));
+        btnSearch = new QPushButton(groupBox);
+        btnSearch->setObjectName(QStringLiteral("btnSearch"));
+        btnSearch->setMinimumSize(QSize(120, 0));
+        btnSearch->setMaximumSize(QSize(120, 16777215));
+
+        formLayout->setWidget(0, QFormLayout::LabelRole, btnSearch);
+
+        btnContinue = new QPushButton(groupBox);
+        btnContinue->setObjectName(QStringLiteral("btnContinue"));
+        btnContinue->setMinimumSize(QSize(120, 0));
+        btnContinue->setMaximumSize(QSize(120, 16777215));
+
+        formLayout->setWidget(0, QFormLayout::FieldRole, btnContinue);
+
+        pbListPending = new QPushButton(groupBox);
+        pbListPending->setObjectName(QStringLiteral("pbListPending"));
+
+        formLayout->setWidget(1, QFormLayout::FieldRole, pbListPending);
+
+
+        gridLayout->addLayout(formLayout, 4, 0, 1, 3);
+
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setSpacing(6);
         horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
@@ -206,28 +233,8 @@ public:
 
         gridLayout->addLayout(horizontalLayout_7, 3, 0, 1, 3);
 
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        btnSearch = new QPushButton(groupBox);
-        btnSearch->setObjectName(QStringLiteral("btnSearch"));
-        btnSearch->setMinimumSize(QSize(120, 0));
-        btnSearch->setMaximumSize(QSize(120, 16777215));
 
-        horizontalLayout_3->addWidget(btnSearch);
-
-        btnContinue = new QPushButton(groupBox);
-        btnContinue->setObjectName(QStringLiteral("btnContinue"));
-        btnContinue->setMinimumSize(QSize(120, 0));
-        btnContinue->setMaximumSize(QSize(120, 16777215));
-
-        horizontalLayout_3->addWidget(btnContinue);
-
-
-        gridLayout->addLayout(horizontalLayout_3, 4, 0, 1, 3);
-
-
-        horizontalLayout_6->addWidget(groupBox);
+        horizontalLayout_3->addWidget(groupBox);
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setSpacing(6);
@@ -303,10 +310,10 @@ public:
         horizontalLayout_4->addLayout(verticalLayout_2);
 
 
-        horizontalLayout_6->addLayout(horizontalLayout_4);
+        horizontalLayout_3->addLayout(horizontalLayout_4);
 
 
-        verticalLayout_3->addLayout(horizontalLayout_6);
+        verticalLayout_3->addLayout(horizontalLayout_3);
 
         MainWindow->setCentralWidget(centralWidget);
 
@@ -328,10 +335,11 @@ public:
         label_5->setText(QApplication::translate("MainWindow", "Estados:", nullptr));
         chkNotDeleting->setText(QApplication::translate("MainWindow", "Solo no Borrantes", nullptr));
         label_7->setText(QApplication::translate("MainWindow", "Pasos:", nullptr));
-        lblCompleted->setText(QApplication::translate("MainWindow", "Finalizadas: 0", nullptr));
-        lblPending->setText(QApplication::translate("MainWindow", "Pendientes: 0", nullptr));
         btnSearch->setText(QApplication::translate("MainWindow", "Buscar", nullptr));
         btnContinue->setText(QApplication::translate("MainWindow", "Continuar", nullptr));
+        pbListPending->setText(QApplication::translate("MainWindow", "Listar Pendientes", nullptr));
+        lblCompleted->setText(QApplication::translate("MainWindow", "Finalizadas: 0", nullptr));
+        lblPending->setText(QApplication::translate("MainWindow", "Pendientes: 0", nullptr));
         chkPrintSteps->setText(QApplication::translate("MainWindow", "Imprimir Pasos", nullptr));
         chkPrintFinalTape->setText(QApplication::translate("MainWindow", "Imprimir Cinta Final", nullptr));
         label_4->setText(QApplication::translate("MainWindow", "Pasos:", nullptr));
